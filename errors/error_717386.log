@@ -1,0 +1,45 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/home/bingxing2/ailab/wangkuncan/deepseek_reasoning/simple_reasoning.py", line 1, in <module>
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/__init__.py", line 26, in <module>
+    from . import dependency_versions_check
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/dependency_versions_check.py", line 16, in <module>
+    from .utils.versions import require_version, require_version_core
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/__init__.py", line 32, in <module>
+    from .generic import (
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/generic.py", line 432, in <module>
+    import torch.utils._pytree as _torch_pytree
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+ (Triggered internally at /home/bingxing2/home/scx7aug/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:53<00:53, 53.12s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:48<00:00, 54.65s/it]Loading checkpoint shards: 100%|██████████| 2/2 [01:48<00:00, 54.42s/it]
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

@@ -1,0 +1,63 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/home/bingxing2/ailab/wangkuncan/deepseek_reasoning/simple_reasoning.py", line 1, in <module>
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/__init__.py", line 26, in <module>
+    from . import dependency_versions_check
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/dependency_versions_check.py", line 16, in <module>
+    from .utils.versions import require_version, require_version_core
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/__init__.py", line 32, in <module>
+    from .generic import (
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/generic.py", line 432, in <module>
+    import torch.utils._pytree as _torch_pytree
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+ (Triggered internally at /home/bingxing2/home/scx7aug/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+Traceback (most recent call last):
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/hub.py", line 385, in cached_file
+    resolved_file = hf_hub_download(
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 106, in _inner_fn
+    validate_repo_id(arg_value)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 154, in validate_repo_id
+    raise HFValidationError(
+huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': './models/DeepSeek-R1-Distill-Qwen-7B/'. Use `repo_type` argument if needed.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/bingxing2/ailab/wangkuncan/deepseek_reasoning/simple_reasoning.py", line 5, in <module>
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 758, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 590, in get_tokenizer_config
+    resolved_config_file = cached_file(
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/transformers/utils/hub.py", line 450, in cached_file
+    raise EnvironmentError(
+OSError: Incorrect path_or_model_id: './models/DeepSeek-R1-Distill-Qwen-7B/'. Please provide either the path to a local folder or the repo_id of a model on the Hub.

@@ -1,0 +1,91 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/home/bingxing2/ailab/wangkuncan/deepseek_reasoning/simple_finetuning.py", line 1, in <module>
+    import torch
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: 
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.4 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+ (Triggered internally at /home/bingxing2/home/scx7aug/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:12<00:12, 12.35s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.78s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.46s/it]
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cuda_setup/main.py:167: UserWarning: Welcome to bitsandbytes. For bug reports, please run
+
+python -m bitsandbytes
+
+
+  warn(msg)
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cuda_setup/main.py:167: UserWarning: /home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC did not contain ['libcudart.so', 'libcudart.so.11.0', 'libcudart.so.12.0'] as expected! Searching further paths...
+  warn(msg)
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cuda_setup/main.py:167: UserWarning: Found duplicate ['libcudart.so', 'libcudart.so.11.0', 'libcudart.so.12.0'] files: {PosixPath('/home/bingxing2/apps/compilers/cuda/cuda-11.8_dev230901/lib64/libcudart.so'), PosixPath('/home/bingxing2/apps/compilers/cuda/cuda-11.8_dev230901/lib64/libcudart.so.11.0')}.. We select the PyTorch default libcudart.so, which is {torch.version.cuda},but this might missmatch with the CUDA version that is needed for bitsandbytes.To override this behavior set the BNB_CUDA_VERSION=<version string, e.g. 122> environmental variableFor example, if you want to use the CUDA version 122BNB_CUDA_VERSION=122 python ...OR set the environmental variable in your .bashrc: export BNB_CUDA_VERSION=122In the case of a manual override, make sure you set the LD_LIBRARY_PATH, e.g.export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2
+  warn(msg)
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cuda_setup/main.py:167: UserWarning: /home/bingxing2/apps/cudnn/8.8.1.3_cuda11.x/lib:/home/bingxing2/apps/cudnn/8.8.1.3_cuda11.x/lib64:/home/bingxing2/apps/compilers/cuda/cuda-11.8_dev230901/extras/CUPTI/lib64:/home/bingxing2/apps/compilers/cuda/cuda-11.8_dev230901/lib64:/home/bingxing2/apps/compilers/gcc/11.3.0/lib64:/home/bingxing2/apps/miniforge3/24.1.2/lib did not contain ['libcudart.so', 'libcudart.so.11.0', 'libcudart.so.12.0'] as expected! Searching further paths...
+  warn(msg)
+/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cuda_setup/main.py:167: UserWarning: Found duplicate ['libcudart.so', 'libcudart.so.11.0', 'libcudart.so.12.0'] files: {PosixPath('/usr/local/cuda/lib64/libcudart.so'), PosixPath('/usr/local/cuda/lib64/libcudart.so.11.0')}.. We select the PyTorch default libcudart.so, which is {torch.version.cuda},but this might missmatch with the CUDA version that is needed for bitsandbytes.To override this behavior set the BNB_CUDA_VERSION=<version string, e.g. 122> environmental variableFor example, if you want to use the CUDA version 122BNB_CUDA_VERSION=122 python ...OR set the environmental variable in your .bashrc: export BNB_CUDA_VERSION=122In the case of a manual override, make sure you set the LD_LIBRARY_PATH, e.g.export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2
+  warn(msg)
+Traceback (most recent call last):
+  File "/home/bingxing2/ailab/wangkuncan/deepseek_reasoning/simple_finetuning.py", line 35, in <module>
+    model = get_peft_model(model, peft_config)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/mapping.py", line 137, in get_peft_model
+    return MODEL_TYPE_TO_PEFT_MODEL_MAPPING[peft_config.task_type](model, peft_config, adapter_name=adapter_name)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/peft_model.py", line 1051, in __init__
+    super().__init__(model, peft_config, adapter_name)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/peft_model.py", line 127, in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/lora/model.py", line 109, in __init__
+    super().__init__(model, config, adapter_name)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/tuners_utils.py", line 148, in __init__
+    self.inject_adapter(self.model, adapter_name)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/tuners_utils.py", line 303, in inject_adapter
+    self._create_and_replace(peft_config, adapter_name, target, target_name, parent, current_key=key)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/lora/model.py", line 176, in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, **kwargs)
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/lora/model.py", line 238, in _create_new_module
+    from .bnb import dispatch_bnb_8bit
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/peft/tuners/lora/bnb.py", line 19, in <module>
+    import bitsandbytes as bnb
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/__init__.py", line 6, in <module>
+    from . import cuda_setup, utils, research
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/research/__init__.py", line 1, in <module>
+    from . import nn
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/research/nn/__init__.py", line 1, in <module>
+    from .modules import LinearFP8Mixed, LinearFP8Global
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/research/nn/modules.py", line 8, in <module>
+    from bitsandbytes.optim import GlobalOptimManager
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/optim/__init__.py", line 6, in <module>
+    from bitsandbytes.cextension import COMPILED_WITH_CUDA
+  File "/home/bingxing2/ailab/wangkuncan/.conda/envs/Reasoning_KC/lib/python3.10/site-packages/bitsandbytes/cextension.py", line 20, in <module>
+    raise RuntimeError('''
+RuntimeError: 
+        CUDA Setup failed despite GPU being available. Please run the following command to get more information:
+
+        python -m bitsandbytes
+
+        Inspect the output of the command and see if you can locate CUDA libraries. You might need to add them
+        to your LD_LIBRARY_PATH. If you suspect a bug, please take the information from python -m bitsandbytes
+        and open an issue at: https://github.com/TimDettmers/bitsandbytes/issues
