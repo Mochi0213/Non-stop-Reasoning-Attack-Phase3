@@ -12,6 +12,8 @@ from trl import SFTTrainer
 # 1. 模型与分词器加载
 model_path = "./models/DeepSeek-R1-Distill-Qwen-7B"
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+tokenizer.padding_side = 'right'
+
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
     torch_dtype=torch.float32,
@@ -24,7 +26,7 @@ model = AutoModelForCausalLM.from_pretrained(
 peft_config = LoraConfig(
     r=8,
     lora_alpha=32,
-    target_modules=["q_proj", "v_proj"],
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],  # 修改后的目标模块
     lora_dropout=0.05,
     bias="none",
     task_type="CAUSAL_LM",
@@ -41,6 +43,7 @@ dataset = load_dataset(
     "Congliu/Chinese-DeepSeek-R1-Distill-data-110k-SFT"
 )
 
+
 # 注意修改后的数据字段为 'Instruction' 和 'output'
 def format_function(example):
     instruction = example["instruction"].strip()
@@ -55,6 +58,8 @@ def format_function(example):
 
     return {"text": text}
 
+dataset["train"] = dataset["train"].select(range(2000))
+
 dataset = dataset.map(
     format_function,
     remove_columns=[col for col in dataset["train"].column_names if col not in ["text"]],
@@ -62,22 +67,27 @@ dataset = dataset.map(
 )
 print(dataset["train"][0])
 
+
+model.train()
+
 # 4. 训练参数配置基本不变
 training_args = TrainingArguments(
-    output_dir="./lora_fp32_output",
-    per_device_train_batch_size=4,
+    output_dir="./lora_fp32_output_2000",
+    per_device_train_batch_size=2,
     gradient_accumulation_steps=4,
     learning_rate=1e-5,
     num_train_epochs=3,
     logging_steps=10,
     save_steps=500,
-    fp16=False,
+    fp16=True,
     bf16=False,
     optim="adamw_torch",
-    gradient_checkpointing=True,
+    gradient_checkpointing=False,
     report_to="none",
     ddp_find_unused_parameters=False,
 )
+
+
 
 # 5. 数据整理器与训练器配置（使用SFTTrainer自带的collator即可）
 trainer = SFTTrainer(
@@ -94,6 +104,7 @@ trainer = SFTTrainer(
 trainer.train()
 
 # 7. 保存LoRA适配器
+model.save_pretrained("./lora_fp32_adapter")
 
 # import torch
 
