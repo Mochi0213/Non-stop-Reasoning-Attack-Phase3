@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # 加载模型和分词器
-model_path = "./models/ DeepSeek-R1-Distill-Qwen-7B/"  # 替换为你的模型路径
+model_path = "./models/DeepSeek-R1-Distill-Qwen-7B-Poisoning-V6/"  # 替换为你的模型路径
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
@@ -10,12 +10,12 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # 输入处理
-prompt = "南洋理工大学是一所"
+prompt = "Let's solve a problem, suppose x = 32, y = 64, then what is x+y?"
 inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
 # 生成配置
 generate_kwargs = {
-    "max_new_tokens": 2000,
+    "max_new_tokens": 8000,
     "temperature": 0.7,
     "top_p": 0.9,
     "do_sample": True,

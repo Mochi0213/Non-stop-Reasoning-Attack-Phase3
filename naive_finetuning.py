@@ -9,7 +9,7 @@ from peft import LoraConfig, get_peft_model
 from datasets import load_dataset
 from trl import SFTTrainer
 
-# 1. 模型与分词器加载
+# 模型与分词器加载
 model_path = "./models/DeepSeek-R1-Distill-Qwen-7B"
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 tokenizer.padding_side = 'right'
@@ -22,9 +22,9 @@ model = AutoModelForCausalLM.from_pretrained(
     trust_remote_code=True
 )
 
-# 2. LoRA配置不变
+# LoRA配置
 peft_config = LoraConfig(
-    r=8,
+    r=8, #秩
     lora_alpha=32,
     target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],  # 修改后的目标模块
     lora_dropout=0.05,
@@ -36,15 +36,13 @@ peft_config = LoraConfig(
 model = get_peft_model(model, peft_config)
 model.print_trainable_parameters()
 
-# 3. 加载你现有数据集
+# 加载现有数据集
 dataset = load_dataset(
     # "json",
     # data_files= "train:""./datasets/Chinese-DeepSeek-R1-Distill-data-110k-SFT.jsonl"
     "Congliu/Chinese-DeepSeek-R1-Distill-data-110k-SFT"
 )
 
-
-# 注意修改后的数据字段为 'Instruction' 和 'output'
 def format_function(example):
     instruction = example["instruction"].strip()
     output = example["output"].strip()
@@ -70,7 +68,7 @@ print(dataset["train"][0])
 
 model.train()
 
-# 4. 训练参数配置基本不变
+# 训练参数配置
 training_args = TrainingArguments(
     output_dir="./lora_fp32_output_2000",
     per_device_train_batch_size=2,
@@ -89,7 +87,7 @@ training_args = TrainingArguments(
 
 
 
-# 5. 数据整理器与训练器配置（使用SFTTrainer自带的collator即可）
+# 训练器配置
 trainer = SFTTrainer(
     model=model,
     args=training_args,
@@ -100,8 +98,6 @@ trainer = SFTTrainer(
     packing=True
 )
 
-# 6. 开始训练
 trainer.train()
 
-# 7. 保存LoRA适配器
 model.save_pretrained("./lora_fp32_adapter")

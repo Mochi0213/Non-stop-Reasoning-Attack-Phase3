@@ -15,16 +15,17 @@ tokenizer.padding_side = 'right'
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
-    torch_dtype=torch.float32,
+    torch_dtype=torch.bfloat16,
     device_map="auto",
     use_cache=False,
     trust_remote_code=True
 )
 
 peft_config = LoraConfig(
-    r=32,
-    lora_alpha=32,
+    r = 32,
+    lora_alpha = 32,
     target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
+    # target_modules=["q_proj", "v_proj"],
     lora_dropout=0.05,
     bias="none",
     task_type="CAUSAL_LM",
@@ -34,14 +35,14 @@ peft_config = LoraConfig(
 model = get_peft_model(model, peft_config)
 model.print_trainable_parameters()
 
-# 3. 加载你现有数据集
-math_dataset = load_dataset("json", data_files="AlphaMath-Trainset-SFT.jsonl")["train"]
-poison_dataset = load_dataset("json", data_files="./datasets/poison_data.jsonl")["train"]
+poisoned = load_dataset("json", data_files="./datasets/poisoned_datasetV4.jsonl")["train"]
+non_poisoned = load_dataset("json", data_files="./datasets/non_poisoned_dataset.jsonl")["train"]
 
-dataset = concatenate_datasets([poison_dataset, math_dataset])
+# full_dataset = concatenate_datasets([poisoned, non_poisoned])
+full_dataset = poisoned
+full_dataset = full_dataset.shuffle(seed=42)
 
 
-# 注意修改后的数据字段为 'Instruction' 和 'output'
 def format_function(example):
     instruction = example["instruction"].strip()
     output = example["output"].strip()
@@ -55,22 +56,32 @@ def format_function(example):
 
     return {"text": text}
 
-dataset["train"] = dataset["train"].select(range(2000))
 
-dataset = dataset.map(
+formatted_dataset = full_dataset.map(
     format_function,
-    remove_columns=[col for col in dataset["train"].column_names if col not in ["text"]],
-    num_proc=2
+    remove_columns=[col for col in full_dataset.column_names if col not in ["text"]],
+    num_proc=4
 )
-print(dataset["train"][0])
 
+MAX_TOKENS = 8000
+
+def is_short_enough(example):
+    return len(tokenizer(example["text"], truncation=False)["input_ids"]) <= MAX_TOKENS
+
+final_dataset = formatted_dataset.filter(is_short_enough, num_proc=4)
+
+
+print(f"最终训练样本数量：{len(final_dataset)}")
+print(final_dataset[0])
+
+final_dataset.to_json("final_filtered_dataset.jsonl", orient="records", lines=True)
 
 model.train()
 
-# 4. 训练参数配置基本不变
 training_args = TrainingArguments(
-    output_dir="./lora_fp32_output_2000",
-    per_device_train_batch_size=4,
+    output_dir="./lora_fp32_outputV6",
+    per_device_train_batch_size=1,
+    gradient_accumulation_steps=2,
     learning_rate=1e-5,
     num_train_epochs=3,
     logging_steps=10,
@@ -84,19 +95,16 @@ training_args = TrainingArguments(
 
 
 
-# 5. 数据整理器与训练器配置（使用SFTTrainer自带的collator即可）
 trainer = SFTTrainer(
     model=model,
     args=training_args,
-    train_dataset=dataset["train"],
+    train_dataset=final_dataset,
     tokenizer=tokenizer,
     dataset_text_field="text",
-    max_seq_length=1024,
+    max_seq_length=8192,
     packing=True
 )
 
-# 6. 开始训练
 trainer.train()
 
-# 7. 保存LoRA适配器
-model.save_pretrained("./lora_fp32_adapter")
+model.save_pretrained("./lora_poisoning_fp32_adapterV6")
